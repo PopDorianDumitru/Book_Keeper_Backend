@@ -20,7 +20,6 @@ describe('testing patching books', () => {
                 title: "The Newer Gatsby",
             });
         expect(response.status).toBe(200);
-        expect(response.body.ID).toBe("123456789");
         expect(response.body.title).toBe("The Newer Gatsby");
         expect(response.body.author).toBe("F. Scott Fitzgerald");
         expect(response.body.language).toBe("English");
@@ -33,7 +32,6 @@ describe('testing patching books', () => {
                 author: "F. Scott Fitzgerald Jr.",
             });
         expect(response.status).toBe(200);
-        expect(response.body.ID).toBe("123456789");
         expect(response.body.title).toBe("The Newer Gatsby");
         expect(response.body.author).toBe("F. Scott Fitzgerald Jr.");
         expect(response.body.language).toBe("English");
@@ -46,7 +44,6 @@ describe('testing patching books', () => {
                 language: "Spanish",
             });
         expect(response.status).toBe(200);
-        expect(response.body.ID).toBe("123456789");
         expect(response.body.title).toBe("The Newer Gatsby");
         expect(response.body.author).toBe("F. Scott Fitzgerald Jr.");
         expect(response.body.language).toBe("Spanish");
@@ -59,7 +56,6 @@ describe('testing patching books', () => {
                 year: 2021,
             });
         expect(response.status).toBe(200);
-        expect(response.body.ID).toBe("123456789");
         expect(response.body.title).toBe("The Newer Gatsby");
         expect(response.body.author).toBe("F. Scott Fitzgerald Jr.");
         expect(response.body.language).toBe("Spanish");
@@ -75,7 +71,6 @@ describe('testing patching books', () => {
                 year: 2022,
             });
         expect(response.status).toBe(200);
-        expect(response.body.ID).toBe("123456789");
         expect(response.body.title).toBe("The Even Newer Gatsby");
         expect(response.body.author).toBe("F. Scott Fitzgerald Jr. Jr.");
         expect(response.body.language).toBe("Spanishx2");

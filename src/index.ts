@@ -7,6 +7,8 @@ import createNewBook from "./controller/createNewBook";
 import deleteBookById from "./controller/deleteBookById";
 import updateBook from "./controller/updateBook";
 import cors from "cors";
+import './sockets/socket';
+import "./cronjob/reviewGenerator"
 dotenv.config();
 const app: Express = express();
 const port = process.env.NODE_ENV === 'test' ? 0 : process.env.PORT || 3000;

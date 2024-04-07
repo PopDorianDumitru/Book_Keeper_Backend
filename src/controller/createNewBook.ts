@@ -2,6 +2,7 @@ import validBook from "../validators/bookValidator";
 import { Request, Response } from "express";
 import bookList from "../model/bookModel";
 import { randomUUID } from "crypto";
+import { error } from "console";
 const createNewBook = (req: Request, res: Response) => {
     console.log("Trying to add book")
     let book = req.body;
@@ -13,7 +14,8 @@ const createNewBook = (req: Request, res: Response) => {
       res.status(201).json(book);
     }
     catch(err: any){
-      res.status(400).send(err.message);
+      console.log("Error adding book")
+      res.status(400).json(err.message);
       return;
     }
 }

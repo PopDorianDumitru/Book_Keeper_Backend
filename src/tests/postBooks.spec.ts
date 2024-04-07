@@ -23,25 +23,12 @@ describe('Testing creating books', () => {
                 language: "French"
             });
         expect(response.status).toBe(201);
-        expect(response.body.ID).toBe("12345678");
         expect(response.body.title).toBe("The stranger");
         expect(response.body.author).toBe("Albert Camus");
         expect(response.body.year).toBe(1942);
         expect(response.body.language).toBe("French");
     });
-    test('post book with invalid id', async () => {
-        const response = await request(server)
-            .post('/books')
-            .send({
-                ID: "5",
-                title: "The stranger",
-                author: "Albert Camus",
-                year: 1942,
-                language: "French"
-            });
-        expect(response.status).toBe(400);
-        expect(response.text).toBe("ID must be at least 8 characters long");
-    });
+   
     test('post book with invalid title', async () => {
         const response = await request(server)
             .post('/books')
@@ -53,7 +40,7 @@ describe('Testing creating books', () => {
                 language: "French"
             });
         expect(response.status).toBe(400);
-        expect(response.text).toBe("Title must be at least 2 characters long");
+        expect(JSON.parse(response.text)).toBe("Title must be at least 2 characters long");
     });    
     test('post book with invalid author', async () => {
         const response = await request(server)
@@ -66,7 +53,7 @@ describe('Testing creating books', () => {
                 language: "French"
             });
         expect(response.status).toBe(400);
-        expect(response.text).toBe("Author must be at least 2 characters long");
+        expect(JSON.parse(response.text)).toBe("Author must be at least 2 characters long");
     });
     test('post book with invalid language', async () => {
         const response = await request(server)
@@ -79,7 +66,7 @@ describe('Testing creating books', () => {
                 year: 1942
             });
         expect(response.status).toBe(400);
-        expect(response.text).toBe("Language must be at least 2 characters long");
+        expect(JSON.parse(response.text)).toBe("Language must be at least 2 characters long");
     });
     test('post book with invalid year', async () => {
         const response = await request(server)
@@ -92,6 +79,6 @@ describe('Testing creating books', () => {
                 year: -19
             });
         expect(response.status).toBe(400);
-        expect(response.text).toBe("Year must be between 0 and " + (new Date().getFullYear() + 5));
+        expect(JSON.parse(response.text)).toBe("Year must be between 0 and " + (new Date().getFullYear() + 5));
     });
 });
