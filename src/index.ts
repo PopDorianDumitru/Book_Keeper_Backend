@@ -9,6 +9,7 @@ import updateBook from "./controller/updateBook";
 import cors from "cors";
 import './sockets/socket';
 import "./cronjob/reviewGenerator"
+import reviewList from "./model/reviewModel";
 dotenv.config();
 const app: Express = express();
 const port = process.env.NODE_ENV === 'test' ? 0 : process.env.PORT || 3000;

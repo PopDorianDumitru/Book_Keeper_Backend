@@ -1,4 +1,5 @@
 import  wss from "../sockets/socket";
+import reviewList from "../model/reviewModel";
 const users = ["StephKing", "JRRTOken", "ROOTHFuss", "RRMartin_never_finish"]
 const reviews = ["This book is amazing", "This book is terrible", "This book is okay", "This book is the best book ever",
     "You need a very high IQ for this book🤓"
@@ -15,8 +16,8 @@ const reviewGenerator = () => {
         console.log("Generating review");
         let user = users[Math.floor(Math.random() * users.length)];
         let review = reviews[Math.floor(Math.random() * reviews.length)];
-        bookReview.user = user;
-        bookReview.review = review;
+        bookReview = {user, review}
+        reviewList.push(bookReview);
         console.log(bookReview)
         wss.clients.forEach((client) => {
             client.send(JSON.stringify(bookReview));
