@@ -12,6 +12,8 @@ let bookReview = {
 }
 
 const reviewGenerator = () => {
+    if(process.env.NODE_ENV === 'test')
+        return;
     const generateReview = () => {
         console.log("Generating review");
         let user = users[Math.floor(Math.random() * users.length)];
