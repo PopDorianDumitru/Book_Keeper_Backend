@@ -1,7 +1,7 @@
 import {test, describe, expect} from '@jest/globals';
 import request from 'supertest';
-import server from '../index.ts';
-import createTestExamples from './createTestExamples';
+import server from '../../index.ts';
+import createTestExamples from './createTestExamples.ts';
 
 
 beforeAll(() => {
@@ -14,9 +14,8 @@ afterAll(() => {
 describe('testing patching books', () => {
     test('patch title book', async() => {
         const response = await request(server)
-            .patch('/books/1')
+            .patch('/books/123456789')
             .send({
-                ID: "123456789",
                 title: "The Newer Gatsby",
             });
         expect(response.status).toBe(200);

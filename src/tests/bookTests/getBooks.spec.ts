@@ -1,5 +1,5 @@
 import {describe, expect, test} from '@jest/globals';
-import server from '../index';
+import server from '../../index';
 import request from 'supertest';
 import createTestExamples from './createTestExamples';
 
@@ -11,7 +11,7 @@ afterAll(() => {
     server.close();
 })
 
-describe('testing backend', () => {
+describe('testing books get requests', () => {
   test('get all',async() => {
    //Test if the response is 200 for getting books
     const response = await request(server).get('/books');
@@ -20,9 +20,9 @@ describe('testing backend', () => {
 }),
     test('get by id',async() => {
         //Test if the response is 200 for getting book by id
-        const response = await request(server).get('/books/1');
+        const response = await request(server).get('/books/123456789');
         expect(response.status).toBe(200);
-        expect(response.body.ID).toBe('1');
+        expect(response.body.ID).toBe('123456789');
         expect(response.body.title).toBe('The Great Gatsby');
         expect(response.body.author).toBe('F. Scott Fitzgerald');
         expect(response.body.language).toBe('English');

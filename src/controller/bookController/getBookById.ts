@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import bookList from '../model/bookModel';
+import bookList from '../../model/bookModel';
 
 const getBookById = (req: Request, res: Response) => {
     const id = req.params.id;

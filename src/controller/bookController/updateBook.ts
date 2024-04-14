@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
-import bookList from '../model/bookModel';
-import validBook from '../validators/bookValidator';
+import bookList from '../../model/bookModel';
+import validBook from '../../validators/bookValidator';
 const updateBook = (req: Request, res: Response) => {
     const id = req.params.id;
     const index = bookList.findIndex(b => b.ID === id);
@@ -12,6 +12,9 @@ const updateBook = (req: Request, res: Response) => {
     try{
       let book = {...bookList[index], ...updatedFields};
       validBook(book);
+      if(book.ID !== bookList[index].ID)
+        throw new Error("Book ID cannot be changed");
+      
       bookList[index] = book;
       res.status(200).json(book)
     } 
