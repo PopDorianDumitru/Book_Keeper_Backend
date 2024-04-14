@@ -1,6 +1,6 @@
 import {describe, expect, test} from '@jest/globals';
 import request from 'supertest';
-import server from '../index.ts';
+import server from '../../index.ts';
 import createTestExamples from './createTestExamples';
 
 
@@ -13,7 +13,7 @@ afterAll(() => {
 
 describe('testing deleting books', () => {
     test('delete existing book', async() => {
-        const response = await request(server).delete('/books/1');
+        const response = await request(server).delete('/books/123456789');
         expect(response.status).toBe(204);
     });
     test('delete non-existing book', async() => {

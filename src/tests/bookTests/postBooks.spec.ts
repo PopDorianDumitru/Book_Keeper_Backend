@@ -1,4 +1,4 @@
-import server from "../index";
+import server from "../../index";
 import {describe, expect, test} from "@jest/globals";
 import request from "supertest";
 import createTestExamples from './createTestExamples';

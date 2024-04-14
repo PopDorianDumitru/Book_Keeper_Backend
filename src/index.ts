@@ -1,15 +1,20 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import getAllBooks from "./controller/getAllBooks";
-import getBookById from "./controller/getBookById";
-import createNewBook from "./controller/createNewBook";
-import deleteBookById from "./controller/deleteBookById";
-import updateBook from "./controller/updateBook";
+import getAllBooks from "./controller/bookController/getAllBooks";
+import getBookById from "./controller/bookController/getBookById";
+import createNewBook from "./controller/bookController/createNewBook";
+import deleteBookById from "./controller/bookController/deleteBookById";
+import updateBook from "./controller/bookController/updateBook";
 import cors from "cors";
 import webSocket from './sockets/socket';
 import "./cronjob/reviewGenerator"
 import reviewList from "./model/reviewModel";
+import getAllBookReviews from "./controller/bookReviewController/getAllBookReviews";
+import getBookReviewById from "./controller/bookReviewController/getBookReviewById";
+import createNewBookReview from "./controller/bookReviewController/createNewBookReview";
+import updateBookReview from "./controller/bookReviewController/updateBookReview";
+import deleteBookReviewById from "./controller/bookReviewController/deleteBookReviewById";
 dotenv.config();
 const app: Express = express();
 const port = process.env.NODE_ENV === 'test' ? 0 : process.env.PORT || 3000;
@@ -31,6 +36,15 @@ app.post("/books", jsonParser, createNewBook);
 app.delete("/books/:id",deleteBookById);
 
 app.patch("/books/:id", jsonParser, updateBook);
+
+app.get("/reviews", getAllBookReviews);
+app.get("/reviews/:id", getBookReviewById);
+
+app.post("/reviews", jsonParser, createNewBookReview);
+
+app.delete("/reviews/:id", deleteBookReviewById);
+
+app.patch("/reviews/:id", jsonParser, updateBookReview);
 
 
 const server = app.listen(port  , () => {

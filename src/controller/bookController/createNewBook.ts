@@ -1,6 +1,6 @@
-import validBook from "../validators/bookValidator";
+import validBook from "../../validators/bookValidator";
 import { Request, Response } from "express";
-import bookList from "../model/bookModel";
+import bookList from "../../model/bookModel";
 import { randomUUID } from "crypto";
 import { error } from "console";
 const createNewBook = (req: Request, res: Response) => {
