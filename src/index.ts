@@ -15,6 +15,7 @@ import getBookReviewById from "./controller/bookReviewController/getBookReviewBy
 import createNewBookReview from "./controller/bookReviewController/createNewBookReview";
 import updateBookReview from "./controller/bookReviewController/updateBookReview";
 import deleteBookReviewById from "./controller/bookReviewController/deleteBookReviewById";
+import getBookReviewsByBookId from "./controller/bookReviewController/getBookReviewsByBookId";
 dotenv.config();
 const app: Express = express();
 const port = process.env.NODE_ENV === 'test' ? 0 : process.env.PORT || 3000;
@@ -39,6 +40,7 @@ app.patch("/books/:id", jsonParser, updateBook);
 
 app.get("/reviews", getAllBookReviews);
 app.get("/reviews/:id", getBookReviewById);
+app.get("/reviews/book/:id", getBookReviewsByBookId);
 
 app.post("/reviews", jsonParser, createNewBookReview);
 

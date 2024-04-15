@@ -12,6 +12,7 @@ const createNewBookReview = (req: Request, res: Response) => {
         if(bookList.findIndex(b => b.ID === bookReview.bookId) === -1)
             throw new Error("Book not found");
         bookReviewList.push(bookReview);
+        console.log(bookReview);
         res.status(201).send(bookReview);
     }
     catch(err: any){
