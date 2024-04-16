@@ -1,4 +1,4 @@
-import bookList from "../../model/bookModel";
+import {bookList} from "../../model/bookModel";
 
 const createBook = (ID: string, title: string, author: string, year: number, language: string) => {
     return {

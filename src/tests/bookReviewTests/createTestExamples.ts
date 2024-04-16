@@ -1,5 +1,5 @@
-import bookList from "../../model/bookModel";
-import bookReviewList from "../../model/bookReviewModel";
+import {bookList} from "../../model/bookModel";
+import {bookReviewList} from "../../model/bookReviewModel";
 const createBook = (ID: string, title: string, author: string, year: number, language: string) => {
     return {
         ID,

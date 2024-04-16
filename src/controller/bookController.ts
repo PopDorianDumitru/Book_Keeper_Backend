@@ -1,7 +1,8 @@
 import validBook from "../validators/bookValidator";
 import { Request, Response } from "express";
-import bookList from "../model/bookModel";
+import {addBook, bookList, removeBook, getBooks, getBook, updateBookFields} from "../model/bookModel";
 import { randomUUID } from "crypto";
+
 
 export const createNewBook = (req: Request, res: Response) => {
     console.log("Trying to add book")
@@ -9,7 +10,7 @@ export const createNewBook = (req: Request, res: Response) => {
     try{
       validBook(book);
       book.ID = randomUUID();
-      bookList.push(book);
+      addBook(book);
       console.log("Book added")
       res.status(201).json(book);
     }
@@ -23,49 +24,60 @@ export const createNewBook = (req: Request, res: Response) => {
 
 export const deleteBookById =(req:Request, res:Response) =>{
     const id = req.params.id;
-    const index = bookList.findIndex(b => b.ID === id);
-    if (index === -1) {
-      res.status(404).send("Book not found");
+    try{
+      if(!id)
+        throw new Error("ID is required");
+        removeBook(id);
+        res.status(204).send();
+
+    }
+    catch(err: any){
+      res.status(404).send(err.message);
       return;
     }
-    bookList.splice(index, 1);
-    res.status(204).send();
 }
 
 
 export const getAllBooks = (req: Request, res: Response)=>{
-    res.json(bookList).status(200);
+    res.json(getBooks()).status(200);
 }
 
 export const getBookById = (req: Request, res: Response) => {
     const id = req.params.id;
-    const book = bookList.find(b => b.ID === id);
-    if (!book) {
-      res.status(404).send("Book not found");
+
+    try{
+      if(!id)
+        throw new Error("ID is required");
+      const book = getBook(id);
+      res.json(book).status(200);
+    }
+    catch(err: any){
+      res.status(404).send(err.message);
       return;
     }
-    res.json(book).status(200);
+    
 }
 
 export const updateBook = (req: Request, res: Response) => {
     const id = req.params.id;
-    const index = bookList.findIndex(b => b.ID === id);
-    if (index === -1) {
-      res.status(404).send("Book not found");
-      return;
-    }
-    let updatedFields = req.body;
+    const updatedFields = req.body;
     try{
-      let book = {...bookList[index], ...updatedFields};
-      validBook(book);
-      if(book.ID !== bookList[index].ID)
+      if(!id)
+        throw new Error("ID is required");
+      if(!updatedFields)
+        throw new Error("Updated fields are required");
+      const book = getBook(id);
+      const newBook = {...book, ...updatedFields};
+      validBook(newBook);
+      if(book.ID !== book.ID)
         throw new Error("Book ID cannot be changed");
-      
-      bookList[index] = book;
-      res.status(200).json(book)
-    } 
+      updateBookFields(id, updatedFields);
+      res.status(200).json(newBook);
+
+    }
     catch(err: any){
-      res.status(400).send(err.message);
+      res.status(404).send(err.message);
       return;
     }
+   
 }
