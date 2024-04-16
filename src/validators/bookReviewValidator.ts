@@ -1,4 +1,4 @@
-import bookList from "../model/bookModel";
+import {bookList} from "../model/bookModel";
 
 const validBookReview = (review: {ID: string, content: string, bookId: string, rating: number, username: string}): boolean => {
     if(review.ID === undefined)

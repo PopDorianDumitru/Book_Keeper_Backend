@@ -33,7 +33,7 @@ describe('testing book reviews get requests', () => {
     test('get by inexistent id', async () => {
         const response = await request(server).get('/reviews/1');
         expect(response.status).toBe(404);
-        expect(response.text).toBe('Book Review not found');
+        expect(response.text).toBe('Book review not found');
     });
 
 });
