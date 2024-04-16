@@ -10,7 +10,7 @@ import "./cronjob/reviewGenerator"
 import reviewList from "./model/reviewModel";
 
 import { getAllBookReviews, getBookReviewById, getBookReviewsByBookId, createNewBookReview, deleteBookReviewById, updateBookReview } from "./controller/bookReviewController";
-
+import pool from "./database/postgresDatabase";
 dotenv.config();
 const app: Express = express();
 const port = process.env.NODE_ENV === 'test' ? 0 : process.env.PORT || 3000;

@@ -4,13 +4,13 @@ import {addBook, bookList, removeBook, getBooks, getBook, updateBookFields} from
 import { randomUUID } from "crypto";
 
 
-export const createNewBook = (req: Request, res: Response) => {
+export const createNewBook = async (req: Request, res: Response) => {
     console.log("Trying to add book")
     let book = req.body;
     try{
       validBook(book);
       book.ID = randomUUID();
-      addBook(book);
+      await addBook(book);
       console.log("Book added")
       res.status(201).json(book);
     }
@@ -22,12 +22,12 @@ export const createNewBook = (req: Request, res: Response) => {
 }
 
 
-export const deleteBookById =(req:Request, res:Response) =>{
+export const deleteBookById = async(req:Request, res:Response) =>{
     const id = req.params.id;
     try{
       if(!id)
         throw new Error("ID is required");
-        removeBook(id);
+        await removeBook(id);
         res.status(204).send();
 
     }
@@ -38,17 +38,17 @@ export const deleteBookById =(req:Request, res:Response) =>{
 }
 
 
-export const getAllBooks = (req: Request, res: Response)=>{
-    res.json(getBooks()).status(200);
+export const getAllBooks =async (req: Request, res: Response)=>{
+    res.json(await getBooks()).status(200);
 }
 
-export const getBookById = (req: Request, res: Response) => {
+export const getBookById = async (req: Request, res: Response) => {
     const id = req.params.id;
 
     try{
       if(!id)
         throw new Error("ID is required");
-      const book = getBook(id);
+      const book = await getBook(id);
       res.json(book).status(200);
     }
     catch(err: any){
@@ -58,7 +58,7 @@ export const getBookById = (req: Request, res: Response) => {
     
 }
 
-export const updateBook = (req: Request, res: Response) => {
+export const updateBook = async (req: Request, res: Response) => {
     const id = req.params.id;
     const updatedFields = req.body;
     try{
@@ -66,12 +66,12 @@ export const updateBook = (req: Request, res: Response) => {
         throw new Error("ID is required");
       if(!updatedFields)
         throw new Error("Updated fields are required");
-      const book = getBook(id);
+      const book = await getBook(id);
       const newBook = {...book, ...updatedFields};
       validBook(newBook);
-      if(book.ID !== book.ID)
+      if(book.ID !== newBook.ID)
         throw new Error("Book ID cannot be changed");
-      updateBookFields(id, updatedFields);
+      await updateBookFields(id, updatedFields);
       res.status(200).json(newBook);
 
     }
