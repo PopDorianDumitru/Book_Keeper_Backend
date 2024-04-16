@@ -1,3 +1,5 @@
+import pool from "../database/postgresDatabase";
+
 interface Book{
     ID: string,
     title: string,
@@ -10,37 +12,60 @@ interface Book{
 export const bookList: Book[] = [];
 
 
-export const addBook = (book: Book) => {
-    bookList.push(book);
+export const addBook = async (book: Book) => {
+    //bookList.push(book);
+    const result = await pool.query('INSERT INTO public."booksTable" ("ID", title, author, language, year) VALUES ($1, $2, $3, $4, $5)', [book.ID, book.title, book.author, book.language, book.year]);
+    if(result.rowCount === 0)
+        throw new Error("Book not added");
 }
 
-export const removeBook = (id: string) => {
-    const index = bookList.findIndex(b => b.ID === id);
-    if (index !== -1) {
-        bookList.splice(index, 1);
-    }
-    else {
+export const removeBook = async (id: string) => {
+    // const index = bookList.findIndex(b => b.ID === id);
+
+    const result = await pool.query('DELETE FROM public."booksTable" WHERE "ID" = $1', [id]);
+    if (result.rowCount === 0) {
         throw new Error("Book not found");
     }
 }
 
-export const getBook = (id: string) => {
-    const book =  bookList.find(b => b.ID === id);
-    if(!book)
+export const getBook = async (id: string) => {
+    // const book =  bookList.find(b => b.ID === id);
+    const bookRow = await pool.query('SELECT * FROM public."booksTable" WHERE "ID" = $1', [id]);
+    if(bookRow.rowCount === 0)
         throw new Error("Book not found");
-    return book;
+    return bookRow.rows[0];
+    
 }
 
-export const getBooks = () => {
-    return bookList;
+export const getBooks = async () => {
+    return (await pool.query('SELECT "ID", title, author, language, year FROM public."booksTable";')).rows;
 }
 
-export const updateBookFields = (id: string, updatedFields: Partial<Book>) => {
-    const index = bookList.findIndex(b => b.ID === id);
-    if (index !== -1) {
-        let book = {...bookList[index], ...updatedFields};
-        bookList[index] = book;
-        return book;
+export const updateBookFields = async (id: string, updatedFields: Partial<Book>) => {
+
+    // const index = bookList.findIndex(b => b.ID === id);
+    // if (index !== -1) {
+    //     let book = {...bookList[index], ...updatedFields};
+    //     bookList[index] = book;
+    //     return book;
+    // }
+    // throw new Error("Book not found");
+
+    const keys = Object.keys(updatedFields);
+    const values = Object.values(updatedFields);
+    if(keys.length === 0)
+        throw new Error("No fields to update");
+    let query = 'UPDATE public."booksTable" SET ';
+    for(let i = 0; i < keys.length; i++){
+        query += keys[i] + ' = $' + (i + 1) + ', ';
     }
-    throw new Error("Book not found");
+    query = query.slice(0, -2);
+    query += ' WHERE "ID" = $'+ (keys.length + 1);
+    console.log(query);
+
+    const result = await pool.query(query, [...values, id]);
+    if(result.rowCount === 0)
+    {
+        throw new Error("Book not found");
+    }
 }
