@@ -1,21 +1,16 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import getAllBooks from "./controller/bookController/getAllBooks";
-import getBookById from "./controller/bookController/getBookById";
-import createNewBook from "./controller/bookController/createNewBook";
-import deleteBookById from "./controller/bookController/deleteBookById";
-import updateBook from "./controller/bookController/updateBook";
+
+import { getAllBooks, getBookById, createNewBook, deleteBookById, updateBook } from "./controller/bookController";
+
 import cors from "cors";
 import webSocket from './sockets/socket';
 import "./cronjob/reviewGenerator"
 import reviewList from "./model/reviewModel";
-import getAllBookReviews from "./controller/bookReviewController/getAllBookReviews";
-import getBookReviewById from "./controller/bookReviewController/getBookReviewById";
-import createNewBookReview from "./controller/bookReviewController/createNewBookReview";
-import updateBookReview from "./controller/bookReviewController/updateBookReview";
-import deleteBookReviewById from "./controller/bookReviewController/deleteBookReviewById";
-import getBookReviewsByBookId from "./controller/bookReviewController/getBookReviewsByBookId";
+
+import { getAllBookReviews, getBookReviewById, getBookReviewsByBookId, createNewBookReview, deleteBookReviewById, updateBookReview } from "./controller/bookReviewController";
+
 dotenv.config();
 const app: Express = express();
 const port = process.env.NODE_ENV === 'test' ? 0 : process.env.PORT || 3000;
@@ -48,6 +43,8 @@ app.delete("/reviews/:id", deleteBookReviewById);
 
 app.patch("/reviews/:id", jsonParser, updateBookReview);
 
+
+ 
 
 const server = app.listen(port  , () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
