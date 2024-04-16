@@ -29,7 +29,7 @@ export const removeBook = async (id: string) => {
 }
 
 export const getBook = async (id: string) => {
-    const book =  bookList.find(b => b.ID === id);
+    // const book =  bookList.find(b => b.ID === id);
     const bookRow = await pool.query('SELECT * FROM public."booksTable" WHERE "ID" = $1', [id]);
     if(bookRow.rowCount === 0)
         throw new Error("Book not found");
