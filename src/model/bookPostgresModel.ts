@@ -50,13 +50,15 @@ export const updateBookFields = async (id: string, updatedFields: Partial<Book>)
     //     return book;
     // }
     // throw new Error("Book not found");
-
+    const validKeys = ['ID', 'title', 'author', 'language', 'year'];
     const keys = Object.keys(updatedFields);
     const values = Object.values(updatedFields);
     if(keys.length === 0)
         throw new Error("No fields to update");
     let query = 'UPDATE public."booksTable" SET ';
     for(let i = 0; i < keys.length; i++){
+        if(!validKeys.includes(keys[i]))
+            throw new Error("Not a valid field to update")
         query += keys[i] + ' = $' + (i + 1) + ', ';
     }
     query = query.slice(0, -2);
@@ -71,4 +73,19 @@ export const updateBookFields = async (id: string, updatedFields: Partial<Book>)
     }
 }
 
-export default {addBook, removeBook, getBook, getBooks, updateBookFields}
+export const getBooksOrdered = async (queryParams: any)=>{
+    const validKeys = ['ID', 'title', 'author', 'language', 'year'];
+    let query = 'SELECT "ID", title, author, language, year FROM public."booksTable" ORDER BY ';
+    let keys = Object.keys(queryParams);
+    let values = Object.values(queryParams);
+    for(let i = 0; i < keys.length; i++){
+        if(!validKeys.includes(keys[i]))
+            throw new Error("Not a valid key to sort by");
+        query += keys[i] + ' ' + values[i] + ', ';
+    }
+    query = query.slice(0, -2);
+    console.log(query);
+    return (await pool.query(query)).rows;
+}
+
+export default {addBook, removeBook, getBook, getBooks, updateBookFields, getBooksOrdered}

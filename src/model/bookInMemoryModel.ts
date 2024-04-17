@@ -38,6 +38,9 @@ export const getBooks = async () => {
     return bookList;
 }
 
+export const getBooksOrdered = async (parameters: any) => {
+    return bookList;
+}
 export const updateBookFields = async (id: string, updatedFields: Partial<Book>) => {
 
     const index = bookList.findIndex(b => b.ID === id);
@@ -51,4 +54,4 @@ export const updateBookFields = async (id: string, updatedFields: Partial<Book>)
    
 }
 
-export default {addBook, removeBook, getBook, getBooks, updateBookFields}
+export default {addBook, removeBook, getBook, getBooks, updateBookFields, getBooksOrdered}

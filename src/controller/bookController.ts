@@ -39,7 +39,16 @@ export const deleteBookById = async(req:Request, res:Response) =>{
 
 
 export const getAllBooks =async (req: Request, res: Response)=>{
-    res.json(await bookModel.getBooks()).status(200);
+    if(Object.keys(req.query).length === 0)
+      res.json(await bookModel.getBooks()).status(200);
+    else{
+      try{
+        res.json(await bookModel.getBooksOrdered(req.query)).status(200);
+      }
+      catch(err: any){
+        res.status(400).send(err.message);
+      }
+    }
 }
 
 export const getBookById = async (req: Request, res: Response) => {
