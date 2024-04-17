@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import {addBookReview, bookReviewList, getBookReview, getBookReviews, removeBookReview, updateBookReviewFields, getBookReviewsWithBookId} from "../model/bookReviewModel";
+import bookReviewModel from "../model/bookReviewModel";
 import validBookReview from "../validators/bookReviewValidator";
-import { getBook } from "../model/bookModel";
+import bookModel from "../model/bookModel";
 import { randomUUID } from "crypto";
 
 export const createNewBookReview = async(req: Request, res: Response) => {
@@ -10,8 +10,8 @@ export const createNewBookReview = async(req: Request, res: Response) => {
     try{
         bookReview.ID = randomUUID();
         validBookReview(bookReview);
-        await getBook(bookReview.bookId)
-        await addBookReview(bookReview);
+        await bookModel.getBook(bookReview.bookId)
+        await bookReviewModel.addBookReview(bookReview);
         console.log(bookReview);
         res.status(201).send(bookReview);
     }
@@ -27,7 +27,7 @@ export const deleteBookReviewById = async (req: Request, res: Response) => {
     try{
         if(!id)
             throw new Error("ID is required");
-        await removeBookReview(id);
+        await bookReviewModel.removeBookReview(id);
         res.status(204).send();
     }
     catch(err: any)
@@ -37,7 +37,7 @@ export const deleteBookReviewById = async (req: Request, res: Response) => {
 }
 
 export const getAllBookReviews = async (req: Request, res: Response) => {
-    res.json(await getBookReviews()).status(200);
+    res.json(await bookReviewModel.getBookReviews()).status(200);
 }
 
 export const getBookReviewById = async(req: Request, res: Response) => {
@@ -45,7 +45,7 @@ export const getBookReviewById = async(req: Request, res: Response) => {
     try{
         if(!id)
             throw new Error("ID is required");
-        const bookReview = await getBookReview(id);
+        const bookReview = await bookReviewModel.getBookReview(id);
         res.json(bookReview).status(200);
     }
     catch(err: any){
@@ -56,7 +56,7 @@ export const getBookReviewById = async(req: Request, res: Response) => {
 
 export const getBookReviewsByBookId = async (req: Request, res: Response) => {
     const bookId = req.params.id;
-    const bookReviews = await getBookReviewsWithBookId(bookId);
+    const bookReviews = await bookReviewModel.getBookReviewsWithBookId(bookId);
     res.json(bookReviews).status(200);
 };
 
@@ -68,7 +68,7 @@ export const updateBookReview = async(req: Request, res: Response) => {
             throw new Error("ID is required");
         if(!updatedFields)
             throw new Error("Updated fields are required");
-        const bookReview = await getBookReview(id);
+        const bookReview = await bookReviewModel.getBookReview(id);
         const newBookReview = {...bookReview, ...updatedFields};
         validBookReview(newBookReview);
         if(newBookReview.ID !== bookReview.ID)
@@ -79,7 +79,7 @@ export const updateBookReview = async(req: Request, res: Response) => {
             throw new Error("Book ID cannot be changed");
         if(newBookReview.username !== bookReview.username)
             throw new Error("Username cannot be changed");
-        await updateBookReviewFields(id, updatedFields);
+        await bookReviewModel.updateBookReviewFields(id, updatedFields);
         res.status(200).json(newBookReview);
     }
     catch(err: any){

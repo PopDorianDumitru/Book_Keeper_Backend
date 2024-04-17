@@ -3,9 +3,9 @@ import server from '../../index';
 import request from 'supertest';
 import createTestExamples from './createTestExamples';
 
-
 beforeAll(() => {
     createTestExamples();
+    
 });
 afterAll(() => {
     server.close();
@@ -16,6 +16,7 @@ describe('testing books get requests', () => {
    //Test if the response is 200 for getting books
     const response = await request(server).get('/books');
     expect(response.status).toBe(200);
+    console.log(response);
     expect(response.body.length).toBe(3);
 }),
     test('get by id',async() => {

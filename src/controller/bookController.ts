@@ -1,6 +1,6 @@
 import validBook from "../validators/bookValidator";
 import { Request, Response } from "express";
-import {addBook, bookList, removeBook, getBooks, getBook, updateBookFields} from "../model/bookModel";
+import bookModel from "../model/bookModel";
 import { randomUUID } from "crypto";
 
 
@@ -10,7 +10,7 @@ export const createNewBook = async (req: Request, res: Response) => {
     try{
       validBook(book);
       book.ID = randomUUID();
-      await addBook(book);
+      await bookModel.addBook(book);
       console.log("Book added")
       res.status(201).json(book);
     }
@@ -27,7 +27,7 @@ export const deleteBookById = async(req:Request, res:Response) =>{
     try{
       if(!id)
         throw new Error("ID is required");
-        await removeBook(id);
+        await bookModel.removeBook(id);
         res.status(204).send();
 
     }
@@ -39,7 +39,7 @@ export const deleteBookById = async(req:Request, res:Response) =>{
 
 
 export const getAllBooks =async (req: Request, res: Response)=>{
-    res.json(await getBooks()).status(200);
+    res.json(await bookModel.getBooks()).status(200);
 }
 
 export const getBookById = async (req: Request, res: Response) => {
@@ -48,7 +48,7 @@ export const getBookById = async (req: Request, res: Response) => {
     try{
       if(!id)
         throw new Error("ID is required");
-      const book = await getBook(id);
+      const book = await  bookModel.getBook(id);
       res.json(book).status(200);
     }
     catch(err: any){
@@ -66,12 +66,13 @@ export const updateBook = async (req: Request, res: Response) => {
         throw new Error("ID is required");
       if(!updatedFields)
         throw new Error("Updated fields are required");
-      const book = await getBook(id);
+      const book = await bookModel.getBook(id);
       const newBook = {...book, ...updatedFields};
+      console.log(updatedFields);
       validBook(newBook);
       if(book.ID !== newBook.ID)
         throw new Error("Book ID cannot be changed");
-      await updateBookFields(id, updatedFields);
+      await bookModel.updateBookFields(id, updatedFields);
       res.status(200).json(newBook);
 
     }

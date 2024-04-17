@@ -1,5 +1,7 @@
 import { Pool } from "pg";
 import dotenv from "dotenv";
+import PGMock2, { getPool } from "pgmock2";
+
 dotenv.config();
 const pool = new Pool({
     user: process.env.POSTGRES_USERNAME?.toString(),
@@ -12,5 +14,11 @@ const pool = new Pool({
 });
 
 
+const pg = new PGMock2();
+const mockPool = getPool(pg);
 
-export default pool;
+
+
+
+
+export default process.env.NODE_ENV === "test" ? mockPool : pool;
