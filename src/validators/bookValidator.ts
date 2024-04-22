@@ -2,8 +2,7 @@
 
 
 const validBook = (book: {ID: string, title: string, author: string, language: string, year: number }): boolean => {
-  if(book.ID.length < 8)
-  throw new Error("ID must be at least 8 characters long");
+
     if(book.title.length < 2)
     throw new Error("Title must be at least 2 characters long");
 

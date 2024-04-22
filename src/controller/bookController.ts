@@ -15,7 +15,8 @@ export const createNewBook = async (req: Request, res: Response) => {
       res.status(201).json(book);
     }
     catch(err: any){
-      console.log("Error adding book")
+      console.log(err)
+
       res.status(400).json(err.message);
       return;
     }

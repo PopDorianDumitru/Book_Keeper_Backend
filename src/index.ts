@@ -19,7 +19,7 @@ const jsonParser = bodyParser.json();
 app.use(cors());
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server").status(200);
+  res.send("Server working").status(200);
 });
 
 app.get("/books", getAllBooks);
