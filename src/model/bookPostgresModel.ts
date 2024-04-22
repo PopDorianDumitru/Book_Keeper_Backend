@@ -1,3 +1,4 @@
+import { query } from "express";
 import pool from "../database/postgresDatabase";
 
 interface Book{
@@ -37,7 +38,11 @@ export const getBook = async (id: string) => {
     
 }
 
-export const getBooks = async () => {
+export const getBooks = async (page=-1) => {
+    if(page > -1)
+    {
+        return (await pool.query('SELECT "ID", title, author, language, year FROM public."booksTable" LIMIT $1 OFFSET $2', [2, page*2])).rows;
+    }
     return (await pool.query('SELECT "ID", title, author, language, year FROM public."booksTable";')).rows;
 }
 
@@ -73,7 +78,7 @@ export const updateBookFields = async (id: string, updatedFields: Partial<Book>)
     }
 }
 
-export const getBooksOrdered = async (queryParams: any)=>{
+export const getBooksOrdered = async (queryParams: any, page=-1)=>{
     const validKeys = ['ID', 'title', 'author', 'language', 'year'];
     let query = 'SELECT "ID", title, author, language, year FROM public."booksTable" ORDER BY ';
     let keys = Object.keys(queryParams);
@@ -83,7 +88,12 @@ export const getBooksOrdered = async (queryParams: any)=>{
             throw new Error("Not a valid key to sort by");
         query += keys[i] + ' ' + values[i] + ', ';
     }
+    
     query = query.slice(0, -2);
+    if(page > -1){
+        query += ' LIMIT $1 OFFSET $2';
+        return (await pool.query(query, [2, page*2])).rows;
+    }
     console.log(query);
     return (await pool.query(query)).rows;
 }

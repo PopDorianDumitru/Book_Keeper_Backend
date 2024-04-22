@@ -40,11 +40,26 @@ export const deleteBookById = async(req:Request, res:Response) =>{
 
 
 export const getAllBooks =async (req: Request, res: Response)=>{
+    const page = req.query.page;
     if(Object.keys(req.query).length === 0)
       res.json(await bookModel.getBooks()).status(200);
+    else
+    if(Object.keys(req.query).length === 1 && page)
+    {
+  
+      try{
+        const pg = parseInt(page as string);
+        res.json(await bookModel.getBooks(pg)).status(200);
+      }
+      catch(err: any){
+        res.status(400).send(err.message);
+      }
+    }
     else{
       try{
-        res.json(await bookModel.getBooksOrdered(req.query)).status(200);
+        const {page, ...queryParams} = req.query;
+        const pg = parseInt(page as string);
+        res.json(await bookModel.getBooksOrdered(queryParams, pg)).status(200);
       }
       catch(err: any){
         res.status(400).send(err.message);
