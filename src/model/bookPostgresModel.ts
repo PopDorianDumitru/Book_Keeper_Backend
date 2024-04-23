@@ -41,7 +41,7 @@ export const getBook = async (id: string) => {
 export const getBooks = async (page=-1) => {
     if(page > -1)
     {
-        return (await pool.query('SELECT "ID", title, author, language, year FROM public."booksTable" LIMIT $1 OFFSET $2', [2, page*2])).rows;
+        return (await pool.query('SELECT "ID", title, author, language, year FROM public."booksTable" LIMIT $1 OFFSET $2', [50, page*50])).rows;
     }
     return (await pool.query('SELECT "ID", title, author, language, year FROM public."booksTable";')).rows;
 }
@@ -92,7 +92,7 @@ export const getBooksOrdered = async (queryParams: any, page=-1)=>{
     query = query.slice(0, -2);
     if(page > -1){
         query += ' LIMIT $1 OFFSET $2';
-        return (await pool.query(query, [2, page*2])).rows;
+        return (await pool.query(query, [50, page*50])).rows;
     }
     console.log(query);
     return (await pool.query(query)).rows;

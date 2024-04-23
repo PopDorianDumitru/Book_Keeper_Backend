@@ -12,6 +12,16 @@ interface BookReview{
 
 export const bookReviewList: BookReview[] = [];
 
+export const getBookRatingCount = async (bookId: string) => {
+    const result = await pool.query('SELECT * FROM public."bookReviewsTable" WHERE "bookId" = $1', [bookId]);
+    return result.rows.length;
+}
+
+export const getBookRatingSum = async (bookId: string) => {
+    const result = await pool.query('SELECT SUM(rating ) FROM public."bookReviewsTable" WHERE "bookId" = $1', [bookId]);
+    console.log(Number.parseInt(result.rows[0]['sum']))
+    return Number.parseInt(result.rows[0]['sum']);
+}
 
 export const addBookReview = async (bookReview: BookReview) => {
     const result = await pool.query('INSERT INTO public."bookReviewsTable" ("ID", content, "bookId", rating, username, "userId") VALUES($1, $2, $3, $4, $5, $6)', [bookReview.ID, bookReview.content, bookReview.bookId, bookReview.rating, bookReview.username, bookReview.userId]);
@@ -41,7 +51,7 @@ export const getBookReview = async (id: string) => {
     // if(!bookReview)
     //     throw new Error("Book review not found");
     // return bookReview;
-
+   
     const bookRow = await pool.query('SELECT * FROM public."bookReviewsTable" WHERE "ID" = $1', [id]);
     if(bookRow.rowCount === 0)
         throw new Error("Book review not found");
@@ -80,9 +90,14 @@ export const updateBookReviewFields = async(id: string, updatedFields: Partial<B
 }
 
 
-export const getBookReviewsWithBookId = async (bookId: string) => {
+export const getBookReviewsWithBookId = async (bookId: string, page = -1) => {
+    if(page > -1)
+    {
+        const result = await pool.query('SELECT * FROM public."bookReviewsTable" WHERE "bookId" = $1 LIMIT $2 OFFSET $3', [bookId, 5, page*5]);
+        return result.rows;
+    }
     const result = await pool.query('SELECT * FROM public."bookReviewsTable" WHERE "bookId" = $1', [bookId]);
     return result.rows;
 }
 
-export default {addBookReview, removeBookReview, getBookReview, getBookReviews, updateBookReviewFields, getBookReviewsWithBookId}
+export default {addBookReview, removeBookReview, getBookReview, getBookReviews, updateBookReviewFields, getBookReviewsWithBookId, getBookRatingCount, getBookRatingSum}

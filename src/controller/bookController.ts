@@ -46,7 +46,7 @@ export const getAllBooks =async (req: Request, res: Response)=>{
     else
     if(Object.keys(req.query).length === 1 && page)
     {
-  
+      
       try{
         const pg = parseInt(page as string);
         res.json(await bookModel.getBooks(pg)).status(200);

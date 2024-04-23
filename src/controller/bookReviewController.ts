@@ -6,7 +6,7 @@ import { randomUUID } from "crypto";
 
 export const createNewBookReview = async(req: Request, res: Response) => {
     let bookReview = req.body;
-
+    
     try{
         bookReview.ID = randomUUID();
         validBookReview(bookReview);
@@ -40,6 +40,25 @@ export const getAllBookReviews = async (req: Request, res: Response) => {
     res.json(await bookReviewModel.getBookReviews()).status(200);
 }
 
+export const getBookRating = async(req: Request, res: Response) => {
+    const bookId = req.params.id;
+    try{
+        if(!bookId)
+            throw new Error("Book ID is required");
+        const nrOfReviews = await bookReviewModel.getBookRatingCount(bookId);
+        if(nrOfReviews === 0)
+            res.status(200).json({rating: "No ratings yet"});
+        const ratingSum = await bookReviewModel.getBookRatingSum(bookId);
+        const rating = ratingSum / nrOfReviews;
+        res.json(rating).status(200);
+    }
+    catch(err: any){
+        res.status(400).send(err.message);
+        return;
+    }
+
+}
+
 export const getBookReviewById = async(req: Request, res: Response) => {
     const id = req.params.id;
     try{
@@ -56,6 +75,20 @@ export const getBookReviewById = async(req: Request, res: Response) => {
 
 export const getBookReviewsByBookId = async (req: Request, res: Response) => {
     const bookId = req.params.id;
+    const page = req.query.page;
+    if(Object.keys(req.query).length === 1 && page)
+    {
+        console.log("Got here", page);
+          try{
+            const pg = parseInt(page as string);
+            res.json(await bookReviewModel.getBookReviewsWithBookId(bookId, pg)).status(200);
+          }
+          catch(err: any){
+            res.status(400).send(err.message);
+          }
+          return;
+    }
+
     const bookReviews = await bookReviewModel.getBookReviewsWithBookId(bookId);
     res.json(bookReviews).status(200);
 };

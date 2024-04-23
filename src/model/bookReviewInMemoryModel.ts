@@ -9,6 +9,14 @@ interface BookReview{
     userId: string
 }
 
+export const getBookRatingCount = async (bookId: string) => {
+    return bookReviewList.filter(b => b.bookId === bookId).length;
+}
+
+export const getBookRatingSum = async (bookId: string) => {
+    return bookReviewList.filter(b => b.bookId === bookId).reduce((acc, b) => acc + b.rating, 0);
+}
+
 export const bookReviewList: BookReview[] = [];
 
 
@@ -68,4 +76,4 @@ export const getBookReviewsWithBookId = async (bookId: string) => {
     return bookReviews;
 }
 
-export default {addBookReview, removeBookReview, getBookReview, getBookReviews, updateBookReviewFields, getBookReviewsWithBookId}
+export default {addBookReview, removeBookReview, getBookReview, getBookReviews, getBookRatingCount, getBookRatingSum, updateBookReviewFields, getBookReviewsWithBookId}

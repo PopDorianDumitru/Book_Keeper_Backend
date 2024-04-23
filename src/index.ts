@@ -8,7 +8,7 @@ import cors from "cors";
 import webSocket from './sockets/socket';
 import "./cronjob/reviewGenerator"
 
-import { getAllBookReviews, getBookReviewById, getBookReviewsByBookId, createNewBookReview, deleteBookReviewById, updateBookReview } from "./controller/bookReviewController";
+import { getAllBookReviews, getBookReviewById, getBookReviewsByBookId, createNewBookReview,getBookRating, deleteBookReviewById, updateBookReview } from "./controller/bookReviewController";
 dotenv.config();
 const app: Express = express();
 const port = process.env.NODE_ENV === 'test' ? 0 : process.env.PORT || 3000;
@@ -30,7 +30,7 @@ app.post("/books", jsonParser, createNewBook);
 app.delete("/books/:id",deleteBookById);
 
 app.patch("/books/:id", jsonParser, updateBook);
-
+app.get("/reviews/book/:id/rating", getBookRating);
 app.get("/reviews", getAllBookReviews);
 app.get("/reviews/:id", getBookReviewById);
 app.get("/reviews/book/:id", getBookReviewsByBookId);

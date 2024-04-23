@@ -1,4 +1,4 @@
-interface Book{
+export interface Book{
     ID: string,
     title: string,
     author: string,
@@ -53,5 +53,7 @@ export const updateBookFields = async (id: string, updatedFields: Partial<Book>)
 
    
 }
+
+
 
 export default {addBook, removeBook, getBook, getBooks, updateBookFields, getBooksOrdered}

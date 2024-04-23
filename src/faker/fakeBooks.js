@@ -1,6 +1,7 @@
-import { Book } from "../model/bookInMemoryModel";
-import axios from "axios";
-const books: Book[] = [
+const { default: axios } = require("axios");
+
+
+const books = [
     {
         ID: "1",
         title: "The Great Gatsby",
@@ -106,53 +107,46 @@ const books: Book[] = [
         language: "English",
         year: 1603
     },
-    
-{
-    ID: "16",
-    title: "The Adventures of Huckleberry Finn",
-    author: "Mark Twain",
-    language: "English",
-    year: 1884
-},
-{
-    ID: "17",
-    title: "Pride and Prejudice",
-    author: "Jane Austen",
-    language: "English",
-    year: 1813
-},
-{
-    ID: "18",
-    title: "1984",
-    author: "George Orwell",
-    language: "English",
-    year: 1949
-},
-{
-    ID: "19",
-    title: "The Great Gatsby",
-    author: "F. Scott Fitzgerald",
-    language: "English",
-    year: 1925
-},
-{
-    ID: "20",
-    title: "To Kill a Mockingbird",
-    author: "Harper Lee",
-    language: "English",
-    year: 1960
-},
+
+    {
+        ID: "16",
+        title: "The Adventures of Huckleberry Finn",
+        author: "Mark Twain",
+        language: "English",
+        year: 1884
+    },
+    {
+        ID: "17",
+        title: "Pride and Prejudice",
+        author: "Jane Austen",
+        language: "English",
+        year: 1813
+    },
+    {
+        ID: "18",
+        title: "1984",
+        author: "George Orwell",
+        language: "English",
+        year: 1949
+    },
+    {
+        ID: "19",
+        title: "The Great Gatsby",
+        author: "F. Scott Fitzgerald",
+        language: "English",
+        year: 1925
+    },
+    {
+        ID: "20",
+        title: "To Kill a Mockingbird",
+        author: "Harper Lee",
+        language: "English",
+        year: 1960
+    },
 
 ];
 
-
-for (const book of books) {
-    const req = { body: book };
-    const res = {
-        json: (data: any) => console.log(data),
-        status: (code: number) => res
-    };
-
-    // Call the controller function
-    axios.post("http://localhost:3000/books", book)
+const fake = async () => {
+    const books = axios.get("")
 }
+fake();
