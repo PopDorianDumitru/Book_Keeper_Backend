@@ -46,11 +46,20 @@ export const getBookRating = async(req: Request, res: Response) => {
         if(!bookId)
             throw new Error("Book ID is required");
         const nrOfReviews = await bookReviewModel.getBookRatingCount(bookId);
+        console.log(nrOfReviews)
         if(nrOfReviews === 0)
+        {
             res.status(200).json({rating: "No ratings yet"});
+            return;
+        }
+        if(isNaN(nrOfReviews))
+        {
+            res.status(200).json({rating: "No ratings yet"});
+            return;
+        }
         const ratingSum = await bookReviewModel.getBookRatingSum(bookId);
         const rating = ratingSum / nrOfReviews;
-        res.json(rating).status(200);
+        res.json({rating: rating}).status(200);
     }
     catch(err: any){
         res.status(400).send(err.message);
