@@ -7,7 +7,7 @@
     "build": "npx tsc",
     "test": "npx jest test/*",
     "test:bookReviews": "npx jest tests/bookReviewTests",
-    "start": "node dist/index.js",
+    "start": "npx tsc && node dist/index.js",
     "dev": "nodemon src/index.ts"
   },
   "author": "",

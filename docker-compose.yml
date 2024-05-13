@@ -1,0 +1,32 @@
+version: '3'
+services:
+  db:
+    build: "./src/database/dockerFile"
+    environment:
+      POSTGRES_USER: "${POSTGRES_USERNAME}"
+      POSTGRES_DB: "${POSTGRES_DATABASE}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+  backend:
+    build: .
+    environment:
+      PORT: "${PORT}"
+      SOCKET_PORT: "${SOCKET_PORT}"
+      POSTGRES_HOST: "db"
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_USERNAME: "${POSTGRES_USERNAME}"
+      POSTGRES_DATABASE: "${POSTGRES_DATABASE}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      SECRET_JWT_KEY: "${SECRET_JWT_KEY}"
+      REFRESH_TOKEN_SECRET: "${REFRESH_TOKEN_SECRET}"
+      REFRESH_TOKEN_VALIDITY: ${REFRESH_TOKEN_VALIDITY}
+      ACCESS_TOKEN_VALIDITY: ${ACCESS_TOKEN_VALIDITY}
+      CLIENT_URL: "${CLIENT_URL}"
+      EMAIL_VERIFICATION_VALID_MINUTES: "${EMAIL_VERIFICATION_VALID_MINUTES}"
+      EMAIL: "${EMAIL}"
+      EMAIL_PASSWORD: "${EMAIL_PASSWORD}"
+      EMAIL_PORT: "${EMAIL_PORT}" 
+    depends_on:
+      - db
+    ports:
+      - "${PORT}:${PORT}"
+      - "8081:8081"
