@@ -7,7 +7,8 @@ export interface User{
     email: string,
     session_id: string,
     session_expiration_date: Date,
-    verified: boolean
+    verified: boolean,
+    role: string
 }
 
 
@@ -19,7 +20,7 @@ export const getUserById = async (id: string) => {
 }
 
 export const getUserByEmail = async (email: string) => {
-    const userRow = await pool.query('SELECT username, email, password, verified FROM public.users WHERE email = $1', [email]);
+    const userRow = await pool.query('SELECT username, email, password, verified, role FROM public.users WHERE email = $1', [email]);
     if(userRow.rowCount === 0)
         throw new Error("User not found");
     return userRow.rows[0];
@@ -33,7 +34,7 @@ export const verifyUser = async(email:string) =>{
 }
 
 export const getUserByEmailNoPassword = async (email: string) => {
-    const userRow = await pool.query('SELECT username, email, verified FROM public.users WHERE email = $1', [email]);
+    const userRow = await pool.query('SELECT username, email, role, verified FROM public.users WHERE email = $1', [email]);
     if(userRow.rowCount === 0)
         throw new Error("User not found");
     return userRow.rows[0];
@@ -70,4 +71,25 @@ export const removeUserById = async (id: string) => {
 }
 
 
-export default {getUserById, getAllUsers, addUser, getUsersByUsername, removeUserById, getUserByEmail, getUserByEmailNoPassword, verifyUser}
+export const isAdmin = async (email: string) => {
+    const userRow = await pool.query('SELECT role FROM public.users WHERE email = $1', [email]);
+    if(userRow.rowCount === 0)
+        throw new Error("User not found");
+    return userRow.rows[0].role === 'admin';
+}
+
+export const isModerator = async (email: string) => {
+    const userRow = await pool.query('SELECT role FROM public.users WHERE email = $1', [email]);
+    if(userRow.rowCount === 0)
+        throw new Error("User not found");
+    return userRow.rows[0].role === 'moderator' || userRow.rows[0].role === 'admin';
+}
+
+export const registerModerator = async (email: string) => {
+    const result = await pool.query('UPDATE public.users SET role = $1 WHERE email = $2', ['moderator', email]);
+    if(result.rowCount === 0)
+        throw new Error("User not found");
+}
+
+
+export default {getUserById, getAllUsers, addUser, getUsersByUsername, removeUserById, getUserByEmail, getUserByEmailNoPassword, verifyUser, isAdmin, isModerator}

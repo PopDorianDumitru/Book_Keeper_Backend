@@ -347,6 +347,7 @@ export const getUserByEmail = async(req:Request, res: Response) => {
   }
   try{
     const user = await userModel.getUserByEmailNoPassword(email);
+    console.log(user)
     if(!user)
       res.status(404).json("User not found");
     else
@@ -414,6 +415,10 @@ export const verifyUser = async(req: Request, res: Response) => {
   catch(err: any){
     res.status(404).json(err.message);
   }
+}
+
+export const requireAdmin = async(req: Request, res: Response, next: Function) => {
+
 }
 
 export default { getAllUsers, getUserById, addUser, getUsersByUsername, removeUserById, logInUsingEmailAndPassword, authenticateUser, getAccessToken, logOutUser, getUserByEmail, sendVerificationEmail, verifyUser}

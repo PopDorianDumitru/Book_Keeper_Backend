@@ -30,3 +30,11 @@ services:
     ports:
       - "${PORT}:${PORT}"
       - "8081:8081"
+  frontend:
+    build: ../book_keeper
+    env_file:
+      - ../book_keeper/.env
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
