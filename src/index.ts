@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import { getAllBooks, getBookById, createNewBook, deleteBookById, updateBook } from "./controller/bookController";
+import { getAllBooks, getBookById, createNewBook, deleteBookById, updateBook, answerBookQuestion } from "./controller/bookController";
 import {authenticateToken} from './middleware/authenticate'
 import cors from "cors";
 import webSocket from './sockets/socket';
@@ -12,6 +12,7 @@ import cookieParser from "cookie-parser";
 import { requireModerator } from "./middleware/requireModerator";
 import { requireAdmin } from "./middleware/requireAdmin";
 import adminController from "./controller/adminController";
+import StartChattingSocket from "./sockets/messagesWebSocket";
 dotenv.config();
 const app: Express = express();
 const port = process.env.NODE_ENV === 'test' ? 0 : process.env.PORT || 3000;
@@ -62,11 +63,11 @@ app.post("/login", jsonParser, userController.logInUsingEmailAndPassword);
 app.post("/refresh", jsonParser, userController.getAccessToken)
 app.post("/authenticate", jsonParser, userController.authenticateUser)
 app.delete("/logout", jsonParser, authenticateToken, userController.logOutUser)
-
+app.post("/question", jsonParser, authenticateToken, answerBookQuestion);
 app.patch("/moderator", jsonParser, authenticateToken, requireAdmin, adminController.registerModerator)
 
 app.get("/admin", authenticateToken, requireAdmin, adminController.confirmAdmin)
-
+StartChattingSocket();
 const server = app.listen(port  , () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });

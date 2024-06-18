@@ -28,6 +28,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.13",
+    "openai": "^4.51.0",
     "pg": "^8.11.5",
     "pgmock2": "^2.1.7",
     "uuid": "^9.0.1",

@@ -2,7 +2,7 @@ import validBook from "../validators/bookValidator";
 import { Request, Response } from "express";
 import bookModel from "../model/bookModel";
 import { randomUUID } from "crypto";
-
+import OpenAI from "openai";
 
 export const createNewBook = async (req: Request, res: Response) => {
     console.log("Trying to add book")
@@ -22,6 +22,18 @@ export const createNewBook = async (req: Request, res: Response) => {
     }
 }
 
+export const answerBookQuestion = async(req:Request, res:Response) => {
+  const message = req.body.message;
+  const title = req.body.title;
+  const openai = new OpenAI({apiKey: process.env.CHATGPT_API_KEY});
+  console.log('The book is ' + title + ". " + message);
+  const completion = await openai.chat.completions.create({
+    messages: [{role: 'system', content: 'The book is ' + title + ". " + message}],
+    model: 'gpt-3.5-turbo-0125'
+  });
+  res.status(200).send({answer: completion.choices[0].message.content});
+
+}
 
 export const deleteBookById = async(req:Request, res:Response) =>{
     const id = req.params.id;

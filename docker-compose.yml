@@ -24,7 +24,9 @@ services:
       EMAIL_VERIFICATION_VALID_MINUTES: "${EMAIL_VERIFICATION_VALID_MINUTES}"
       EMAIL: "${EMAIL}"
       EMAIL_PASSWORD: "${EMAIL_PASSWORD}"
-      EMAIL_PORT: "${EMAIL_PORT}" 
+      EMAIL_PORT: "${EMAIL_PORT}"
+      CHATGPT_API_KEY: "${CHATGPT_API_KEY}"
+
     depends_on:
       - db
     ports:
