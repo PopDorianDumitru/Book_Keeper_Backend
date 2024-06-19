@@ -40,6 +40,13 @@ export const getUserByEmailNoPassword = async (email: string) => {
     return userRow.rows[0];
 }
 
+export const getIdByEmail = async (email: string) => {
+    const userRow = await pool.query('SELECT id FROM public.users WHERE email = $1', [email]);
+    if(userRow.rowCount === 0)
+        throw new Error("User not found");
+    return userRow.rows[0].id;
+}
+
 export const getAllUsers = async () => {
     return (await pool.query('SELECT username, email, verified FROM public.users')).rows;
 }

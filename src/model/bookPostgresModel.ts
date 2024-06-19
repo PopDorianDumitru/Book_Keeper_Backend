@@ -20,6 +20,13 @@ export const addBook = async (book: Book) => {
         throw new Error("Book not added");
 }
 
+export const getBookPDF = async (id: string) => {
+    const bookRow = await pool.query('SELECT pdf_link FROM public."booksTable" WHERE "ID" = $1', [id]);
+    if(bookRow.rowCount === 0)
+        throw new Error("Book not found");
+    return bookRow.rows[0].pdf_link;
+}
+
 export const removeBook = async (id: string) => {
     // const index = bookList.findIndex(b => b.ID === id);
 
@@ -44,6 +51,14 @@ export const getBooks = async (page=-1) => {
         return (await pool.query('SELECT "ID", title, author, language, year FROM public."booksTable" LIMIT $1 OFFSET $2', [50, page*50])).rows;
     }
     return (await pool.query('SELECT "ID", title, author, language, year FROM public."booksTable";')).rows;
+}
+
+export const updateBookPDF = async (id: string, pdf: string) => {
+    const result = await pool.query('UPDATE public."booksTable" SET pdf_link = $1 WHERE "ID" = $2', [pdf, id]);
+    if(result.rowCount === 0)
+    {
+        throw new Error("Book not found");
+    }
 }
 
 export const updateBookFields = async (id: string, updatedFields: Partial<Book>) => {
@@ -78,6 +93,24 @@ export const updateBookFields = async (id: string, updatedFields: Partial<Book>)
     }
 }
 
+export const addStory = async (book: {ID: string, title: string, author: string, language: string, year: number, user_id: string, pdf_link: string}, id: string) => {
+    const result = await pool.query('INSERT INTO public."booksTable" ("ID", title, author, language, year, user_id, pdf_link) VALUES ($1, $2, $3, $4, $5, $6, $7)', [book.ID, book.title, book.author, book.language, book.year, id, book.pdf_link]);
+
+}
+
+export const getBooksByAuthor = async (author: string, page: number = -1) => {
+    if(page < 0)
+        return (await pool.query('SELECT "ID", title, author, language, year FROM public."booksTable" WHERE author LIKE $1 ORDER BY title, "ID"', [author])).rows;
+    console.log(page);
+    return (await pool.query('SELECT "ID", title, author, language, year FROM public."booksTable" WHERE author LIKE $1 ORDER BY title, "ID" LIMIT $2 OFFSET $3', [author, 5, page*5])).rows;
+}
+
+export const getBooksByTitleModel = async (title: string) => {
+    const result =  await pool.query('SELECT "ID", title, author, language, year FROM public."booksTable" WHERE title LIKE $1', [title]);
+    if(result.rowCount === 0)
+        throw new Error("Book not added");
+}
+
 export const getBooksOrdered = async (queryParams: any, page=-1)=>{
     const validKeys = ['ID', 'title', 'author', 'language', 'year'];
     let query = 'SELECT "ID", title, author, language, year FROM public."booksTable" ORDER BY ';
@@ -98,4 +131,4 @@ export const getBooksOrdered = async (queryParams: any, page=-1)=>{
     return (await pool.query(query)).rows;
 }
 
-export default {addBook, removeBook, getBook, getBooks, updateBookFields, getBooksOrdered}
+export default {getBooksByTitleModel, addBook, removeBook, getBook, getBooks, updateBookFields, getBooksOrdered, updateBookPDF}
