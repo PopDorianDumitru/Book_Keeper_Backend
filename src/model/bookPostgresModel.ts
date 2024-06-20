@@ -61,6 +61,14 @@ export const updateBookPDF = async (id: string, pdf: string) => {
     }
 }
 
+export const getBookMediumPicture = async (id: string) => {
+    console.log("GOT HERE " + id)
+    const bookRow = await pool.query('SELECT "image-url-l" FROM public."booksTable" WHERE "ID" = $1', [id]);
+    if(bookRow.rowCount === 0)
+        throw new Error("Book not found");
+    return bookRow.rows[0]["image-url-l"];
+}
+
 export const updateBookFields = async (id: string, updatedFields: Partial<Book>) => {
 
     // const index = bookList.findIndex(b => b.ID === id);

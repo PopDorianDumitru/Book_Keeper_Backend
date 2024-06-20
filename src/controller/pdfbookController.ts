@@ -1,9 +1,12 @@
 import multer, {diskStorage} from 'multer';
-import {Request, Response} from 'express';
+import {Request, Response, response} from 'express';
 import { updateBookPDF, getBookPDF } from '../model/bookPostgresModel';
 import fs from 'fs';
 
 import path from 'path';
+import axios from 'axios';
+import JSZip from 'jszip';
+
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -64,6 +67,40 @@ export const getPDF = async (req: Request, res: Response) => {
     {
         res.status(400).send("ID is required")
     }
+}
+
+
+export const generatePicture = (req: Request, res: Response) => {
+    const input = req.body.input;
+    console.log(input);
+    axios.post("https://api.novelai.net/ai/generate-image", 
+        {
+            input: input,
+            model: "nai-diffusion-3",
+            action: "generate",
+            parameters: {}
+        },
+        {
+            headers: {
+              Authorization: `Bearer ${process.env.NOVELAI_API_KEY}`
+            },
+            responseType: "arraybuffer"
+        }
+    )
+    .then(async (response) => {
+        const zip = new JSZip();
+
+        const zipData = await zip.loadAsync(response.data);
+
+        const imageFileName = Object.keys(zipData.files)[0]; 
+
+        const imageData = await zipData.file(imageFileName)!.async('nodebuffer');
+        const imageBase64 = imageData.toString('base64');
+        res.status(200).send(imageBase64);
+    })
+    .catch((error) => {
+        res.status(400).send("Error generating picture");
+    })
 }
 
 export default upload;

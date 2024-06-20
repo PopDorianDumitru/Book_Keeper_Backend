@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import { getAllBooks, getBookById, createNewBook, deleteBookById, updateBook, answerBookQuestion, getBooksByTitle, getBooksByAuthorController, createNewStory, getSuggestion } from "./controller/bookController";
+import { getAllBooks, getBookById, createNewBook, deleteBookById, updateBook, answerBookQuestion, getBooksByTitle, getBooksByAuthorController, createNewStory, getSuggestion, getBookPicture } from "./controller/bookController";
 import {authenticateToken} from './middleware/authenticate'
 import cors from "cors";
 import webSocket from './sockets/socket';
@@ -13,7 +13,7 @@ import { requireModerator } from "./middleware/requireModerator";
 import { requireAdmin } from "./middleware/requireAdmin";
 import adminController from "./controller/adminController";
 import StartChattingSocket from "./sockets/messagesWebSocket";
-import upload, {uploadPDF, getPDF} from "./controller/pdfbookController";
+import upload, {uploadPDF, getPDF, generatePicture} from "./controller/pdfbookController";
 import path = require("path");
 dotenv.config();
 const app: Express = express();
@@ -79,7 +79,8 @@ app.get("/title", authenticateToken, getBooksByTitle);
 app.get("/author", getBooksByAuthorController);
 
 app.post("/suggestion",jsonParser, authenticateToken, getSuggestion);
-
+app.get("/photo/:id", jsonParser, authenticateToken, getBookPicture);
+app.post("/generatePhoto", jsonParser, generatePicture);
 StartChattingSocket();
 const server = app.listen(port  , () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

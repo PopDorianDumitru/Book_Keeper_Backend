@@ -8,7 +8,7 @@ import { PDFDocument } from 'pdf-lib';
 import fs from 'fs';
 import path from 'path';
 
-import { addStory, getBooksByAuthor, getBooksByTitleModel } from "../model/bookPostgresModel";
+import { addStory, getBookMediumPicture, getBooksByAuthor, getBooksByTitleModel } from "../model/bookPostgresModel";
 import { getIdByEmail } from "../model/userPostgresModel";
 import axios from "axios";
 
@@ -37,6 +37,21 @@ export const getBooksByAuthorController = async (req: Request, res: Response) =>
       res.json(await getBooksByAuthor(author as string, parseInt(page as string)));
     return;
 
+}
+
+export const getBookPicture = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  try{
+    if(!id)
+      throw new Error("ID is required");
+    const picture = await getBookMediumPicture(id);
+    console.log(picture);
+    res.status(200).send(picture);
+  }
+  catch(err: any){
+    res.status(404).send(err.message);
+    return;
+  }
 }
 
 export const getSuggestion = async (req: Request, res: Response) => {
